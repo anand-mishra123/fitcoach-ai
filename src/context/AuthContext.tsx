@@ -35,9 +35,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // Check if email already exists
       const { data: existing } = await supabase
         .from("users")
-        .select("id, name, email")
+        .select("id")
         .eq("email", email)
-        .single();
+        .maybeSingle();
 
       if (existing) return "An account with this email already exists.";
 
