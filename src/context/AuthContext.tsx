@@ -1,6 +1,14 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import { supabase } from "@/lib/supabase";
 
+// SHA-256 hash using Web Crypto API
+const hashPassword = async (password: string): Promise<string> => {
+  const msgBuffer = new TextEncoder().encode(password);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+};
+
 type Plan = "BEAST PRO" | "ELITE" | null;
 
 interface User {
@@ -44,7 +52,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // Insert new user
       const { data, error } = await supabase
         .from("users")
-        .insert({ name, email, password })
+        .insert({ name, email, password: await hashPassword(password) })
         .select("id, name, email")
         .single();
 
@@ -56,12 +64,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsModalOpen(false);
       return null;
     } else {
-      // Sign in — find user by email + password
+      // Sign in — find user by email + hashed password
       const { data, error } = await supabase
         .from("users")
         .select("id, name, email")
         .eq("email", email)
-        .eq("password", password)
+        .eq("password", await hashPassword(password))
         .single();
 
       if (error || !data) return "Invalid email or password.";
