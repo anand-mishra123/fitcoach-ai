@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Clock, Flame, ChevronLeft, Play, Pause, SkipForward, CheckCircle2, Dumbbell, Trophy } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/context/AuthContext";
 
 const workoutData: Record<string, {
   title: string;
@@ -53,6 +55,7 @@ const workoutData: Record<string, {
 const WorkoutSession = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const workout = workoutData[slug || ""];
 
   const [currentExercise, setCurrentExercise] = useState(0);
@@ -104,6 +107,13 @@ const WorkoutSession = () => {
         setIsResting(true);
       } else {
         setFinished(true);
+        // Save workout session to Supabase
+        if (user) {
+          supabase.from("workout_sessions").insert({
+            user_id: user.id,
+            workout_slug: slug,
+          });
+        }
       }
     }
   }, [workout, currentExercise, currentSet]);

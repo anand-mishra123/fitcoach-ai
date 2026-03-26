@@ -8,33 +8,34 @@ import { Label } from "@/components/ui/label";
 import { Dumbbell } from "lucide-react";
 
 const AuthModal = () => {
-  const { isModalOpen, closeAuthModal, login } = useAuth();
+  const { isModalOpen, closeAuthModal, login, signup } = useAuth();
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [signInData, setSignInData] = useState({ email: "", password: "" });
   const [signUpData, setSignUpData] = useState({ name: "", email: "", password: "" });
 
-  const handleSignUp = (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!signUpData.name || !signUpData.email || !signUpData.password) {
       setError("All fields are required.");
       return;
     }
-    login(signUpData.name, signUpData.email);
+    setLoading(true);
+    const err = await signup(signUpData.name, signUpData.email, signUpData.password);
+    setLoading(false);
+    if (err) setError(err);
   };
 
-  const handleSignIn = (e: React.FormEvent) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    const stored = localStorage.getItem("fitcoach_user");
-    if (!stored) {
-      setError("No account found. Please sign up first.");
+    if (!signInData.email || !signInData.password) {
+      setError("All fields are required.");
       return;
     }
-    const user = JSON.parse(stored);
-    if (user.email !== signInData.email) {
-      setError("Invalid email or password.");
-      return;
-    }
-    login(user.name, user.email);
+    setLoading(true);
+    const err = await login(signInData.email, signInData.password);
+    setLoading(false);
+    if (err) setError(err);
   };
 
   return (
@@ -86,8 +87,8 @@ const AuthModal = () => {
                 />
               </div>
               {error && <p className="text-destructive text-sm">{error}</p>}
-              <Button type="submit" className="w-full bg-primary text-primary-foreground hover:opacity-90 font-bold tracking-wide glow-primary">
-                SIGN IN
+              <Button type="submit" disabled={loading} className="w-full bg-primary text-primary-foreground hover:opacity-90 font-bold tracking-wide glow-primary">
+                {loading ? "Signing in..." : "SIGN IN"}
               </Button>
             </form>
           </TabsContent>
@@ -125,8 +126,8 @@ const AuthModal = () => {
                 />
               </div>
               {error && <p className="text-destructive text-sm">{error}</p>}
-              <Button type="submit" className="w-full bg-primary text-primary-foreground hover:opacity-90 font-bold tracking-wide glow-primary">
-                CREATE ACCOUNT
+              <Button type="submit" disabled={loading} className="w-full bg-primary text-primary-foreground hover:opacity-90 font-bold tracking-wide glow-primary">
+                {loading ? "Creating account..." : "CREATE ACCOUNT"}
               </Button>
             </form>
           </TabsContent>

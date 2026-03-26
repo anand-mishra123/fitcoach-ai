@@ -63,13 +63,21 @@ const Navbar = () => {
               </button>
             </div>
           ) : (
-            <a
-              href="#premium"
-              onClick={handlePremium}
-              className="px-5 py-2 rounded-lg bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity"
-            >
-              Go Premium
-            </a>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={openAuthModal}
+                className="px-5 py-2 rounded-lg border border-border text-foreground font-semibold text-sm hover:border-primary/50 transition-colors"
+              >
+                Sign In
+              </button>
+              <a
+                href="#premium"
+                onClick={handlePremium}
+                className="px-5 py-2 rounded-lg bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity"
+              >
+                Go Premium
+              </a>
+            </div>
           )}
         </div>
 
@@ -113,13 +121,21 @@ const Navbar = () => {
                   </button>
                 </div>
               ) : (
-                <a
-                  href="#premium"
-                  onClick={(e) => { setOpen(false); handlePremium(e); }}
-                  className="px-5 py-2 rounded-lg bg-primary text-primary-foreground font-semibold text-sm text-center"
-                >
-                  Go Premium
-                </a>
+                <>
+                  <button
+                    onClick={() => { setOpen(false); openAuthModal(); }}
+                    className="px-5 py-2 rounded-lg border border-border text-foreground font-semibold text-sm text-center"
+                  >
+                    Sign In
+                  </button>
+                  <a
+                    href="#premium"
+                    onClick={(e) => { setOpen(false); handlePremium(e); }}
+                    className="px-5 py-2 rounded-lg bg-primary text-primary-foreground font-semibold text-sm text-center"
+                  >
+                    Go Premium
+                  </a>
+                </>
               )}
             </div>
           </motion.div>

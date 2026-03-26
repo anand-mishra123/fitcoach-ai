@@ -68,8 +68,8 @@ const PaymentModal = ({ plan, onClose }: PaymentModalProps) => {
       theme: {
         color: "#84cc16", // matches --primary (lime green)
       },
-      handler: () => {
-        subscribe(plan!.name as "BEAST PRO" | "ELITE");
+      handler: (response: any) => {
+        subscribe(plan!.name as "BEAST PRO" | "ELITE", response.razorpay_payment_id);
         setLoading(false);
         setSuccess(true);
       },
