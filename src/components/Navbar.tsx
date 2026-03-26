@@ -47,7 +47,10 @@ const Navbar = () => {
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-secondary">
                 <User className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium text-foreground">{user.name}</span>
+                <div>
+                  <p className="text-sm font-medium text-foreground">{user.name}</p>
+                  <p className="text-xs text-muted-foreground">ID: {user.user_id}</p>
+                </div>
                 {subscription && (
                   <span className="text-xs font-bold text-primary-foreground bg-primary px-2 py-0.5 rounded-full">
                     {subscription === "BEAST PRO" ? "PRO" : "ELITE"}
@@ -109,7 +112,10 @@ const Navbar = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <User className="w-4 h-4 text-primary" />
-                    <span className="text-sm font-medium text-foreground">{user.name}</span>
+                    <div>
+                      <p className="text-sm font-medium text-foreground">{user.name}</p>
+                      <p className="text-xs text-muted-foreground">ID: {user.user_id}</p>
+                    </div>
                     {subscription && (
                       <span className="text-xs font-bold text-primary-foreground bg-primary px-2 py-0.5 rounded-full">
                         {subscription === "BEAST PRO" ? "PRO" : "ELITE"}

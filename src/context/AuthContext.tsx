@@ -13,6 +13,7 @@ type Plan = "BEAST PRO" | "ELITE" | null;
 
 interface User {
   id: string;
+  user_id: number;
   name: string;
   email: string;
 }
@@ -53,12 +54,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const { data, error } = await supabase
         .from("users")
         .insert({ name, email, password: await hashPassword(password) })
-        .select("id, name, email")
+        .select("id, user_id, name, email")
         .single();
 
       if (error) return "Sign up failed. Please try again.";
 
-      const u = { id: data.id, name: data.name, email: data.email };
+      const u = { id: data.id, user_id: data.user_id, name: data.name, email: data.email };
       localStorage.setItem("fitcoach_user", JSON.stringify(u));
       setUser(u);
       setIsModalOpen(false);
@@ -67,7 +68,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // Sign in — find user by email + hashed password
       const { data, error } = await supabase
         .from("users")
-        .select("id, name, email")
+        .select("id, user_id, name, email")
         .eq("email", email)
         .eq("password", await hashPassword(password))
         .single();
@@ -83,7 +84,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         .limit(1)
         .single();
 
-      const u = { id: data.id, name: data.name, email: data.email };
+      const u = { id: data.id, user_id: data.user_id, name: data.name, email: data.email };
       localStorage.setItem("fitcoach_user", JSON.stringify(u));
       if (sub?.plan) {
         localStorage.setItem("fitcoach_subscription", sub.plan);
