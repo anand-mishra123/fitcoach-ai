@@ -108,7 +108,7 @@ const WorkoutSession = () => {
       } else {
         setFinished(true);
         // Save workout session to Supabase
-        if (user) {
+        if (user?.id) {
           supabase.from("workout_sessions").insert({
             user_id: user.id,
             workout_slug: slug,

@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Dumbbell } from "lucide-react";
 
 const AuthModal = () => {
-  const { isModalOpen, closeAuthModal, login, signup } = useAuth();
+  const { isModalOpen, closeAuthModal, login } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [signInData, setSignInData] = useState({ email: "", password: "" });
@@ -21,7 +21,7 @@ const AuthModal = () => {
       return;
     }
     setLoading(true);
-    const err = await signup(signUpData.name, signUpData.email, signUpData.password);
+    const err = await login(signUpData.name, signUpData.email, signUpData.password, true);
     setLoading(false);
     if (err) setError(err);
   };
@@ -33,7 +33,7 @@ const AuthModal = () => {
       return;
     }
     setLoading(true);
-    const err = await login(signInData.email, signInData.password);
+    const err = await login("", signInData.email, signInData.password, false);
     setLoading(false);
     if (err) setError(err);
   };
@@ -68,9 +68,7 @@ const AuthModal = () => {
             <form onSubmit={handleSignIn} className="space-y-4 mt-4">
               <div className="space-y-1">
                 <Label className="text-foreground">Email</Label>
-                <Input
-                  type="email"
-                  placeholder="you@example.com"
+                <Input type="email" placeholder="you@example.com"
                   className="bg-muted border-input text-foreground placeholder:text-muted-foreground"
                   value={signInData.email}
                   onChange={(e) => setSignInData({ ...signInData, email: e.target.value })}
@@ -78,16 +76,14 @@ const AuthModal = () => {
               </div>
               <div className="space-y-1">
                 <Label className="text-foreground">Password</Label>
-                <Input
-                  type="password"
-                  placeholder="••••••••"
+                <Input type="password" placeholder="••••••••"
                   className="bg-muted border-input text-foreground placeholder:text-muted-foreground"
                   value={signInData.password}
                   onChange={(e) => setSignInData({ ...signInData, password: e.target.value })}
                 />
               </div>
               {error && <p className="text-destructive text-sm">{error}</p>}
-              <Button type="submit" disabled={loading} className="w-full bg-primary text-primary-foreground hover:opacity-90 font-bold tracking-wide glow-primary">
+              <Button type="submit" disabled={loading} className="w-full bg-primary text-primary-foreground hover:opacity-90 font-bold tracking-wide glow-primary disabled:opacity-60">
                 {loading ? "Signing in..." : "SIGN IN"}
               </Button>
             </form>
@@ -97,9 +93,7 @@ const AuthModal = () => {
             <form onSubmit={handleSignUp} className="space-y-4 mt-4">
               <div className="space-y-1">
                 <Label className="text-foreground">Full Name</Label>
-                <Input
-                  type="text"
-                  placeholder="John Doe"
+                <Input type="text" placeholder="John Doe"
                   className="bg-muted border-input text-foreground placeholder:text-muted-foreground"
                   value={signUpData.name}
                   onChange={(e) => setSignUpData({ ...signUpData, name: e.target.value })}
@@ -107,9 +101,7 @@ const AuthModal = () => {
               </div>
               <div className="space-y-1">
                 <Label className="text-foreground">Email</Label>
-                <Input
-                  type="email"
-                  placeholder="you@example.com"
+                <Input type="email" placeholder="you@example.com"
                   className="bg-muted border-input text-foreground placeholder:text-muted-foreground"
                   value={signUpData.email}
                   onChange={(e) => setSignUpData({ ...signUpData, email: e.target.value })}
@@ -117,16 +109,14 @@ const AuthModal = () => {
               </div>
               <div className="space-y-1">
                 <Label className="text-foreground">Password</Label>
-                <Input
-                  type="password"
-                  placeholder="••••••••"
+                <Input type="password" placeholder="••••••••"
                   className="bg-muted border-input text-foreground placeholder:text-muted-foreground"
                   value={signUpData.password}
                   onChange={(e) => setSignUpData({ ...signUpData, password: e.target.value })}
                 />
               </div>
               {error && <p className="text-destructive text-sm">{error}</p>}
-              <Button type="submit" disabled={loading} className="w-full bg-primary text-primary-foreground hover:opacity-90 font-bold tracking-wide glow-primary">
+              <Button type="submit" disabled={loading} className="w-full bg-primary text-primary-foreground hover:opacity-90 font-bold tracking-wide glow-primary disabled:opacity-60">
                 {loading ? "Creating account..." : "CREATE ACCOUNT"}
               </Button>
             </form>
